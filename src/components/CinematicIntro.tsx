@@ -41,7 +41,7 @@ export function CinematicIntro() {
   const [ready, setReady] = useState(false);
   const [shining, setShining] = useState(false);
   const closed = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const timers = useRef<number[]>([]);
   const motes = useMemo(
     () =>
       Array.from({ length: 36 }, (_, i) => ({
