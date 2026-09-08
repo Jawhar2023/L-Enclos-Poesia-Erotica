@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Cormorant_Garamond, Noto_Naskh_Arabic, Source_Sans_3 } from "next/font/google";
 import { BookTurn } from "@/components/BookTurn";
+import { ContactDock } from "@/components/ContactDock";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LangProvider } from "@/context/LangContext";
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <ContactDock />
           <BookTurn />
         </LangProvider>
       </body>
