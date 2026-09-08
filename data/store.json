@@ -1,0 +1,195 @@
+{
+  "comments": [
+    {
+      "id": "2b4614ac-7590-47e8-b076-4de2bf11d877",
+      "poemId": "a-a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "author": "woww",
+      "body": "tress bien",
+      "createdAt": "2026-09-07T22:34:23.543Z"
+    },
+    {
+      "id": "2439ff17-9df9-4569-a794-82521d2ec9d8",
+      "poemId": "a-a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "author": "cc",
+      "body": "dd",
+      "createdAt": "2026-09-07T22:36:04.338Z"
+    },
+    {
+      "id": "5f23c0a4-0202-4791-8d3f-c45a9d2385ea",
+      "poemId": "a-a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "author": "ccc",
+      "body": "vcvc",
+      "createdAt": "2026-09-07T22:40:09.462Z",
+      "avatar": "parchment"
+    }
+  ],
+  "reactions": [
+    {
+      "id": "01e282b3-1e52-4c42-972f-1db46a274b27",
+      "poemId": "vie-rais",
+      "visitorId": "d4f2ca82-bff9-4f44-b342-58bb7a072a7a"
+    },
+    {
+      "id": "dd21f496-d134-4eaa-a3fc-e733fe900b2f",
+      "poemId": "a-a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "visitorId": "d4f2ca82-bff9-4f44-b342-58bb7a072a7a"
+    },
+    {
+      "id": "4046310f-1f24-4c78-b45d-adede4c89970",
+      "poemId": "ailes-mouette",
+      "visitorId": "d4f2ca82-bff9-4f44-b342-58bb7a072a7a"
+    }
+  ],
+  "submissions": [
+    {
+      "id": "ec6e8bd9-e36d-4f31-b1d2-3d1c97e3d472",
+      "author": "adem",
+      "titleFr": "mr adem ",
+      "titleAr": "",
+      "bodyFr": "aloooooo tibooooo",
+      "bodyAr": "",
+      "status": "pending",
+      "createdAt": "2026-09-07T22:41:15.367Z"
+    }
+  ],
+  "adminPoems": [
+    {
+      "id": "a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "titleFr": "la boheme",
+      "titleAr": "البوهيمي",
+      "authorFr": "mr jawhar",
+      "authorAr": "السيد جوهر",
+      "bodyFr": "« Le Dormeur du val » d'Arthur Rimbaud : un poème saisissant sur la nature et la tragédie de la guerre.\n« Le Pont Mirabeau » de Guillaume Apollinaire : une mélodie fluide sur l'amour qui passe et le temps qui fuit.\n« L'Albatros » de Charles Baudelaire : une métaphore puissante sur la place du poète dans la société.",
+      "bodyAr": "\"Le Dormeur du va\" لآرثر رامبو: قصيدة مؤثرة عن طبيعة الحرب ومأساتها.\n\"Le Pont Mirabeau\" لغيوم أبولينير: لحن سلس عن الحب العابر ومرور الوقت.\n\"طائر القطرس\" لشارل بودلير: استعارة قوية لمكانة الشاعر في المجتمع.",
+      "createdAt": "2026-09-07T22:33:52.543Z"
+    }
+  ],
+  "poems": [
+    {
+      "id": "ailes-mouette",
+      "titleFr": "Mus par des ailes de mouette",
+      "titleAr": "بجناحي زمجتين",
+      "authorFr": "Moncef Ouhaïbi",
+      "authorAr": "المنصف الوهايبي",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "Une leçon de mysticisme amoureux : à deux, il est possible de combler ce qui fait défaut à la beauté du monde.",
+      "introAr": "درس في التصوّف العشقي: معاً يمكن رتق ما ينقص جمال العالم.",
+      "dedicationAr": "إلى جينياه",
+      "placeFr": "Mértola, sud du Portugal, été 2003",
+      "placeAr": "مرتولا، جنوب البرتغال، صيف 2003",
+      "bodyFr": "A Mertola, moellons d'or et d'argent :\nUn château arabe\nSe dresse, solitaire, au bord de la rivière.\nToute la journée, tout autour, nous avions tourné :\nNuls gardes en haut des tours, nuls hôtes derrière les murs.\nEt si on en ouvrait, madame, la porte verte ?\nSi on ouvrait grand cette porte en cyprès,\nDis, si on y entrait ?\nEt si l'on y habitait ?\nMais comment faire ?\nComment faire, alors qu'en lui, ou en nous, quelque chose fait défaut,\nUn je ne sais quoi dont nous ne savons rien ?\nLorsque nous revînmes le lendemain,\n(J'avais passé la nuit à rêver du château et de ses hôtes, à tes côtés)\nLorsque nous revînmes le lendemain,\nEt que je le contemplai sous le soleil qui le baignait,\nJe vis qu'à l'angle droit, une pierre manquait\nEt qu'à l'angle gauche aussi, il en était ainsi.\nJe vis, de l'endroit où tous deux nous nous tenions,\nJe vis le château, qui lui-même comblait les deux angles qui béaient.\nNous étions bien là où, nous deux, nous nous tenions,\nMais là-haut, au lieu de deux moellons, nous avions comblé les deux angles béants.\nC'était le matin.\nLa porte à deux battants\nEtait grande ouverte,\nEt nous vîmes nos deux ombres aux ailes de mouette\nDevancer la foule qui courait vers la porte.",
+      "bodyAr": "قصرٌ عربيٌ في مرتولا، من لبن فضّيّ ذهبيّ\nمنتصبٌ حذو النّهر وحيدا،\nطُفنا طُول اليوم به،\nلا عسسٌ في الأبراج ولا أحدٌ من أهليه!\nماذا لو فتحنا هذا الباب الأخضر سيّيدتي\nباب السّرو على مصراعيه\nودلفنا!؟\nماذا لو نحن سكنّا فيه!؟\nلكن كيف به؟\nكيف؟ وثمّة شيء ما ينقصه أو ينقصنا\nشيء لا ندريه!؟\nحين رَجعنا في اليوم التّالي\n(قضيّت الليل إلى جنبك أحلم بالقصر وما فيه)\nونظرت مليّا في ضوء الشّمس إليه\nكان الرّكن الأيمن ينقصه حجرٌ\nوالرّكن الأيسرُ أيضا،\nورأيت القصر ونحن الاثنين\nلم نبرح موضعنا\nيستكمل ركنيه\nوإذا نحن هنا في موقفنا\nوهنالك في أعلى الرّكنين\nمنطبعان مكان الحجرين!\nكان الوقتُ صباحا\nوالباب على مصراعيه\nمفتوح\nحين رأينا ظِلّيْنا بجناحيْ زمجتين\nيستبقان الأفواج إليه.",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "vie-rais",
+      "titleFr": "Vie de la Raïs",
+      "titleAr": "ومضة من ومضات حياة الرايس",
+      "authorFr": "Anonyme / tradition",
+      "authorAr": "ومضة",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "De mes anciennes traductions, une lueur de la vie du raïs.",
+      "introAr": "من ترجماتي القديمة، ومضة من ومضات حياة الرايس.",
+      "bodyFr": "Saura-t-on jamais pourquoi la vague,\nqui se brise sur la plage,\nse replie dans les bras de la mer,\nqui mille fois la renie,\nalors que le sable, à ses pieds,\nbrûle de désir et languit ?",
+      "bodyAr": "ما الذي يجعل الموجة تتلاشى على الشاطئ\nوتعود لأحضان البحر هو الذي لفظها ألف مرة\nبينما الرمل يحترق شهوة وشوقا عند قدميها؟",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "chat-andalou",
+      "titleFr": "Un chat andalou",
+      "titleAr": "قطّ أندلسي",
+      "authorFr": "Moncef Louhaïbi",
+      "authorAr": "المنصف الوهايبي",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "Traduction présentée dans le cadre du colloque-hommage organisé par la Faculté de Kairouan.",
+      "introAr": "ترجمة قُدّمت في إطار ندوة التكريم بكلية القيروان.",
+      "placeFr": "Grenade, été 2001",
+      "placeAr": "غرناطة، صيف 2001",
+      "bodyFr": "Toute la journée, à Grenade, derrière du verre fumé,\nUn chat andalou nous avait épiés.\nOn déambulait à Albayazine,\nEt il déambulait !\nOn gravissait ses escaliers de pierre,\nEt il les gravissait,\nPuis les dévalait !\nOn traversait le Darro,\nEt il le traversait !\nL'on grimpait jusqu'à L'Alhambra,\nEt il grimpait !\nA l'arabesque de Boabdil, il nous vint des ailes,\nEt il lui en poussa deux, à lui aussi !\nEncore un peu et nous étions deux oiseaux,\nEt lui de même !\nMais, sur nos traces, qui l'avait donc mis ?\nEt pourquoi était-il à nos trousses, ainsi ?\nLorsque, pour notre première nuit,\nNous pénétrâmes notre forêt primordiale\nEt que d'herbes tu fis notre lit,\nA sauter de branche en branche, nous passâmes la nuit.\nCette peau bleue, est-ce la tienne ou la mienne ?\nEt cette voix ? Ronron de chatte ou vol d'abeilles, qui essaime en fredonnant ?\nEt là, sous le nombril ? Est-ce un vair d'écureuil ou la fourrure d'un chat ?\nNous en étions encore à décrypter la glaise originelle :\nDe nos deux corps, nous ternissions l'immaculée blancheur,\nNous nous ébattions jusqu'au fin fond de la terre,\nEt deux oiseaux, pour ainsi dire, nous allions devenir,\nQuand, sur le chat andalou, la porte s'ouvrit\nEt qu'il s'avança vers nous, en arborant une queue bleu de nuit !",
+      "bodyAr": "قطّ أندلسي ينظر من بلّور أسود،\nيتبعنا في غرناطة طول اليوم\nنتسكّع في البيّازين\nيتسكّع!\nنرقى سلّمها الحجري\nيرقاه!\nيهبط!\nنعبر نهر \"الدّارو\"\nيعبره!\nنصعد نحو الحمراء\nيصعد!\nنستنبت في أربيسك أبي عبد الله جناحين\nيستنبت!\nنوشك أن نتحوّل عصفورين\nيوشك!\nمن دلّ علينا هذا القطّ الأندلسي؟\nولماذا يتبعنا نحن الاثنين!؟\nحين دخلنا غابتنا الأولى\nفي ليلتنا الأولى\nوفرشتِ جناح الأعشاب\nكنّا نقفز من غصن في الليل إلى غصن\nهذا الجلد الأزرق؟ جلدك أم جلدي؟\nهذا الصّوت! رجيع الهرّة أم إفراق النّحل!؟\nهذي الفروة تحت السّرّة؟ فروة هرّ أم سنجاب!؟\nكنّا في لغة الصّلصال الأولى\nنخلع أضواء الجسدين\nنهبط في الأرض عميقا\nنوشك أن نتحوّل عصفورين\nإذ فتح القطّ الأندلسيّ علينا الباب\nوتقدّم يسحب ذيلا أزرق كاللّيل!",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "baigneuse",
+      "titleFr": "La Baigneuse",
+      "titleAr": "المغتسلة",
+      "authorFr": "Abū-Nuwās",
+      "authorAr": "أبو نواس",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "En composant son « Anna-Livia Plurabelle », Moncef Louhaibi avait à l'esprit « La Baigneuse » d'Abu-Nawās.",
+      "introAr": "حين كتب «أنّا ليفيا بلورابيل» كان في خاطر المنصف الوهايبي «المغتسلة» لأبي نواس.",
+      "bodyFr": "Elle ôte sa nuisette et à la cascade se prête.\nEmue, la pudeur l'étreint et sa joue rosit.\nElle offre, toute nue, à l'haleine de l'air\nSa fine silhouette, plus subtile qu'éther.\nElle tend la paume de sa main d'ondine\nEt, dans les fonts, remue l'eau qui attend.\nQuand elle eut fini, qu'en hâte elle se lève\nEt s'apprête à se saisir de l'habit,\nDu voyeur elle voit l'ombre se profiler.\nAlors, de noir, elle drape la lumière\nEt sous le voile de la nuit, l'aube s'évanouit.\nSeul témoin : gouttes qui sur des gouttes gouttent.\nAlors, disons-le : Gloire à Dieu qui la créa\nEt le parangon de la Femme il en fit.",
+      "bodyAr": "نَضَتْ عنها القَمِيْـصَ لصَبِّ ماءِ\nفَـوَرَّدَ خَـدَّها فَـرْطُ الحيـاءِ\nوقَابَلَـتِ النَّسِيـم وَقَدْ تَعَـرَّتْ\nبِمُعْـتَدلٍ أرَقّ مـِنَ الـهَـوَاءِ\nومَـدَّتْ رَاحَةً كالـمَاءِ منْهَـا\nإلـى مَـاءٍ مُعَـدٍّ فـي إنَـاءِ\nفَلَمَّا أَنْ قَضَـتْ وِطْرًا وَهَمَّـتْ\nعَلى عَجَـلٍ لِتَـأْخُذَ بالـرِّدَاءِ\nرَأَتْ شَخْص الرَّقِيْب على التَّدَاني\nفَأَسْبَلَتِ الظَّـلاَمَ على الضِّيـاءِ\nفَغَـابَ الصّبْحُ مِنْها تَحْتَ لَيْـلٍ\nوَظَلَّ الـمَاءُ يَقْطُـرُ فَوْقَ مَـاءِ\nفَسُبْحَـانَ الإلـهِ وَقَدْ بَرَاهـا\nكَأَحْسَنِ مَا يَكُونُ مِنَ النِّسَـاءِ.",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "anna-livia",
+      "titleFr": "Anna-Livia Plurabelle",
+      "titleAr": "أنّا ليفيا بلورابيل",
+      "authorFr": "Moncef Louhaibi",
+      "authorAr": "المنصف الوهايبي",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "dedicationFr": "À Abū-Nawās, en souvenir de sa « Baigneuse »",
+      "dedicationAr": "إلى أبي نواس ذكرى المغتسلة",
+      "bodyFr": "Elle délia lentement ses tresses\nEt se prit à songer.\nSur l'aile du souvenir, elle se revit sur le lit,\nOù, de plaisir, elle avait longtemps rugi.\nL'eau ruisselait,\nEt de tous ses filets la baignait.\nMotte après motte,\nElle puisait dans le cuivre la pâte odorante.\nElle se massait, et sur ses chairs opalines,\nSous la main qui passait et repassait,\nUne ombre diaphane naissait,\nRévélant au fond de la nuit,\nLe noir profond du mamelon.\nLorsque dans le cristal,\nElle eut façonné des bracelets,\nUn psellion et un collier,\nElle humecta deux crayons.\nElle se farda les sourcils,\nPuis, sur la peau moite,\nRoulèrent essences et aromates.\nElle s'enduisit d'eau de cire le nombril,\nEt avec l'adresse du bateleur,\nElle tressa une natte subtile\nEt y mêla des herbes des prés.\nPuis, pour la nuit, elle alluma une bougie,\nEt dans les plis du poème,\nElle fit son lit et s'endormit",
+      "bodyAr": "حلّتْ على مهلٍ ضفائرَها\nسَرَحتْ قليلا وهي تَذكُر في السَّرير\nعُواءَ مُتعَتها\nوكان الماءُ مُنهمِرًا\nتَنْحَلُّ كلُّ خيوطِه فيها\nوقد حَفَنَتْ من الطَّمْيِ المُعطَّرِ في\nالنُّحَاسِ\nودَلّكَتْ ضَوءَ الجسدِ\nحتّى تُكَسّرَ ظِلّهُ\nوأَضاءَ في غَبشِ الظّلامِ\nسَوَادُ حلمتها\nحتى إذا صَنَعَتْ من البِلّورِ أَسْوِرَةً\nوخُلخالا وعِقْدًا\nبَلّلتْ قلمينِ\nوانْهمَكَتْ تُلوِّنُ حاجبين وبَشْرَةً\nمنها بأوراقِ النَّباتِ وبالزّبدْ\nدَهَنَتْ بماءِ الشَّمْعِ\nسُرَّتَهَا\nوطَوَتْ بخفّةِ بَهلوانٍ خصْلةً منها\nولَفَّتها بأعشاب المُرُوجِ\nوأَوْقَدَتْ للّيْلِ\nشَمْعَتَهَا\nونَامَتْ في القَصِيدَةْ",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "chat-arthenice",
+      "titleFr": "Le chat d'Arthénice",
+      "titleAr": "هرّ أرطنيس",
+      "authorFr": "Abdelhamid Ladhari",
+      "authorAr": "عبد الحميد الذّهاري",
+      "dedicationFr": "À la mémoire de Catherine de Rambouillet",
+      "dedicationAr": "إلى ذكرى كاترين دو رامبوييه",
+      "bodyFr": "Dans l'antichambre bleue, tentures de velours,\nEt sur un guéridon, de marbre marqueté,\nAffublé d'un carquois, déguisé en Amour,\nUn gros chat, narquois et songeur, garde l'entrée.\nUne dame masquée, en fourreau satiné,\nFait valser les deux colombes du pigeonnier,\nPendant que le marquis, haletant de dépit,\nFait claquer sa bottine contre le lambris.\nQuand la Dame parut, la troupe salua.\nPuis, telle une ombre, la traîne emboîte le pas\nEt l'ivoire de l'éventail ouvre la voie.\nPar la croisée, une rafale s'engouffra\nEt un convive, du bras, heurta le gros chat,\nQui vola sur le marbre en mille et mille éclats.",
+      "bodyAr": "",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "sobre-vin",
+      "titleFr": "Sobre ou pris de vin et même dans l'entre-temps",
+      "titleAr": "صاحياً أو ثملاً وحتى فيما بينهما",
+      "authorFr": "Mohamed Miloud Gharrafi",
+      "authorAr": "محمد ميلود الغرافي",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "Traduit de l'arabe par Abdelhamid Ladhari",
+      "introAr": "نقله إلى الفرنسية عبد الحميد الذّهاري",
+      "bodyFr": "Je t'aime\nEntre deux stations,\nAvant l'arrêt\nEt bien après.\nJe t'aime\nEntre deux feux,\nEt au café,\nEntre deux gorgées\nDe mon verre chagrin.\nJe t'aime\nAvant que décline le soleil\nEt après le coucher.\nJe t'aime\nAu boulevard Saint-Germain,\nLa nuit,\nEt à l'hôtel\nOù de ses étoiles, tu fus la cinquième.\nJe t'aime\nA une heure, à l'heure de Facebook\nEt pile à midi\nQuand, au fond de la fatale solitude, résonne\nLe pouls des douze coups de cloche de l'église voisine.\nJe t'aime\nEn chemise blanche\nAu restaurant chinois\nEt en robe grise,\nDégrafée sur le Pont des arts.\nJe t'aime,\nQue tu me le rendes\nOu sans rien devoir en retour.\nJe t'aime avec tes mains douces\nEt sur la route du marchand de glaces.\nJe t'aime,\nTremblant de froid,\nA ma sortie du bain.\nJe t'aime\nOppressée par le corset,\nEssoufflée par mon premier baiser.\nJe t'aime,\nSobre ou pris de vin,\nEt même dans l'entre-temps.\nJe t'aime\nQuand, les seins pris dans la dentelle,\nTu te dresses sur la pointe des pieds.\nJe t'aime, les jambes en l'air,\nA moins de deux empans du plafond.\nJe t'aime\nQuand, derrière toi, dans l'escalier,\nJe t'emboîte le pas,\nOu dévalant les marches, seul dans la nuit.\nJe t'aime entre deux matchs du Mondial,\nJ'aime ma défaite quand, de tout ton poids, tu pèses sur moi,\nJe t'aime à tort\nEt je t'aime à raison,\nJe t'aime en secret\nOu quand je clame\nMon amour dans le poème.\nJe t'aime à l'Odéon,\nA l'insu de Mathilde Seigner,\nQui passe en revue la liste de ses envies.\nJe t'aime, les cheveux en bataille,\nAvec ou sans\nDu rouge aux lèvres.\nJe t'aime autant que faire se pourra,\nAutant qu'il y a d'eau dans le Nil,\nA croire qu'Al-Muɛizz, c'est moi\nEt que mon vainqueur, c'est Toi.\nJe t'aime quand tu me reviens\nEt je t'aime autant, quand je cesse d'être tien.",
+      "bodyAr": "",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "sauver-son-reve",
+      "titleFr": "Extrait de « Sauver son rêve »",
+      "titleAr": "مقتطف من «إنقاذ حلمه»",
+      "authorFr": "Marianne Catzaras",
+      "authorAr": "ماريان كاتزاراس",
+      "translatorFr": "Abdelhamid Ladhari",
+      "translatorAr": "عبد الحميد الذّهاري",
+      "introFr": "Éditions Bruno Doucey, 2024. Traduit en langue arabe par Abdelhamid Ladhari.",
+      "introAr": "منشورات برونو دوسي، 2024. نقله إلى العربية عبد الحميد الذّهاري.",
+      "bodyFr": "J'ai perdu ton nom Aziz\nDans les flots\nEt j'ai nagé moi aussi\nDans l'écume\nQue ton corps a formée\nJ'ai nagé nagé\nEt mon souffle s'est coupé\nUn petit corps maigre\nRecouvert par les siècles\nFaisait pâlir les algues\nEt le rivage lui-même\nS'est mis à sangloter\nSur la carte du monde\nTon nom s'est mélangé\nAux étoiles\nEt le passeur\nCourait dans les marges\nLes yeux crevés par le compas\nDu colonisateur qui trace\nDéplace les arbres et les femmes\nLes maisons et les hommes",
+      "bodyAr": "في لجج البحر\nضاع عني اسمك يا عزيز،\nوسبحت أنا الأخرى\nفي الزبد\nالذي أفرزه جسدك.\nسبحت سبحت\nحتى انقطعت منٍيَ الأنفاس.\n\nجسيدك الهزيل\nالمتدثر بالعصور،\n أضفى على الطحالب\nمسحة شحوب\nفبات البحر على الضفة ينحب.\n\nعلى خارطة الكون\nتداخل اسمك\nمع النجوم\nوالعبار مهرول عبر حدود خطها المستعمر\nببركار فقأ عينيه\nفراحت الأشجار في غير منبتها\nوفي غير مسكنها النساء\nوراحت الديار في غير موقعها\nوفي غير موطنهم بات الرجال",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "a-a4e34864-45ad-4ae2-bda1-a189892e3acc",
+      "titleFr": "la boheme",
+      "titleAr": "البوهيمي",
+      "authorFr": "mr jawhar",
+      "authorAr": "السيد جوهر",
+      "bodyFr": "« Le Dormeur du val » d'Arthur Rimbaud : un poème saisissant sur la nature et la tragédie de la guerre.\n« Le Pont Mirabeau » de Guillaume Apollinaire : une mélodie fluide sur l'amour qui passe et le temps qui fuit.\n« L'Albatros » de Charles Baudelaire : une métaphore puissante sur la place du poète dans la société.",
+      "bodyAr": "\"Le Dormeur du va\" لآرثر رامبو: قصيدة مؤثرة عن طبيعة الحرب ومأساتها.\n\"Le Pont Mirabeau\" لغيوم أبولينير: لحن سلس عن الحب العابر ومرور الوقت.\n\"طائر القطرس\" لشارل بودلير: استعارة قوية لمكانة الشاعر في المجتمع.",
+      "createdAt": "2026-09-07T22:33:52.543Z"
+    }
+  ],
+  "seeded": true
+}
