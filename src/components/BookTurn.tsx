@@ -29,7 +29,7 @@ export function BookTurn() {
 
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
-      if (busy.current || phase !== "idle") return;
+      if (busy.current) return;
       if (event.defaultPrevented || event.button !== 0) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -42,47 +42,56 @@ export function BookTurn() {
 
       const next = `${url.pathname}${url.search}`;
       const here = `${window.location.pathname}${window.location.search}`;
-      if (next === here) return;
+      if (next === here) {
+        if (url.hash) return;
+        return;
+      }
 
       event.preventDefault();
       event.stopPropagation();
       busy.current = true;
       pending.current = `${next}${url.hash}`;
       setPhase("turn");
+      router.push(pending.current);
     };
 
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== "turn") return;
-    const href = pending.current;
-    const go = window.setTimeout(() => {
-      if (href) router.push(href);
-    }, 220);
-    const done = window.setTimeout(() => {
-      busy.current = false;
-      pending.current = null;
-      setPhase("idle");
-    }, 980);
-    return () => {
-      window.clearTimeout(go);
-      window.clearTimeout(done);
-    };
-  }, [phase, router]);
+  }, [router]);
 
   useEffect(() => {
     if (prevPath.current === pathname) return;
     prevPath.current = pathname;
-    if (pending.current) {
-      pending.current = null;
-      return;
+    const fromClick = Boolean(pending.current);
+    pending.current = null;
+
+    if (fromClick) {
+      const done = window.setTimeout(() => {
+        busy.current = false;
+        setPhase("idle");
+      }, 700);
+      return () => window.clearTimeout(done);
     }
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     busy.current = true;
     setPhase("turn");
+    const done = window.setTimeout(() => {
+      busy.current = false;
+      setPhase("idle");
+    }, 720);
+    return () => window.clearTimeout(done);
   }, [pathname]);
+
+  useEffect(() => {
+    if (phase !== "turn") return;
+    const failsafe = window.setTimeout(() => {
+      busy.current = false;
+      pending.current = null;
+      setPhase("idle");
+    }, 1400);
+    return () => window.clearTimeout(failsafe);
+  }, [phase]);
 
   if (phase === "idle") return null;
 

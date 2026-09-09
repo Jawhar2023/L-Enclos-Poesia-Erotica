@@ -64,8 +64,29 @@ create policy poems_read on public.poems for select using (true);
 drop policy if exists comments_read on public.comments;
 create policy comments_read on public.comments for select using (true);
 
+drop policy if exists comments_insert on public.comments;
+create policy comments_insert on public.comments for insert with check (true);
+
+drop policy if exists comments_delete on public.comments;
+create policy comments_delete on public.comments for delete using (true);
+
 drop policy if exists reactions_read on public.reactions;
 create policy reactions_read on public.reactions for select using (true);
+
+drop policy if exists reactions_insert on public.reactions;
+create policy reactions_insert on public.reactions for insert with check (true);
+
+drop policy if exists reactions_delete on public.reactions;
+create policy reactions_delete on public.reactions for delete using (true);
+
+drop policy if exists submissions_read on public.submissions;
+create policy submissions_read on public.submissions for select using (true);
+
+drop policy if exists submissions_insert on public.submissions;
+create policy submissions_insert on public.submissions for insert with check (true);
+
+drop policy if exists submissions_update on public.submissions;
+create policy submissions_update on public.submissions for update using (true) with check (true);
 
 create or replace function public.exec_sql(q text)
 returns jsonb
@@ -78,7 +99,7 @@ declare
   result jsonb;
   n int;
 begin
-  if trimmed ~* '^(select|with|explain|show|values|table)\b' then
+  if trimmed ~* '^(select|with|explain|show|values|table)([^[:alnum:]_]|$)' then
     execute 'select coalesce(jsonb_agg(row_to_json(t)), ''[]''::jsonb) from (' || rtrim(trimmed, E' \n\t;') || ') as t'
       into result;
     return jsonb_build_object('ok', true, 'type', 'rows', 'rows', coalesce(result, '[]'::jsonb));

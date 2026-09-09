@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { randomAvatar } from "@/components/CommentAvatar";
-import { getStore, mutateStore, uid } from "@/lib/db";
+import { addComment, listComments, uid } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const poemId = new URL(req.url).searchParams.get("poemId") || "";
-  const store = await getStore();
-  const comments = store.comments
-    .filter((c) => c.poemId === poemId)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const comments = await listComments(poemId);
   return NextResponse.json({ comments });
 }
 
@@ -25,6 +24,11 @@ export async function POST(req: Request) {
     createdAt: new Date().toISOString(),
     avatar: randomAvatar(),
   };
-  await mutateStore((s) => s.comments.push(comment));
-  return NextResponse.json({ comment });
+  try {
+    await addComment(comment);
+    return NextResponse.json({ comment });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

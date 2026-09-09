@@ -79,6 +79,11 @@ html[lang="ar"] body,
     0 22px 50px rgba(47, 43, 40, 0.22);
 }
 
+.sql-editor textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #5c5348 transparent;
+}
+
 .alcove {
   background:
     linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(244, 237, 226, 0.92));

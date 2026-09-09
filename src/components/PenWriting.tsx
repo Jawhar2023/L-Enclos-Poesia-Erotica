@@ -38,16 +38,17 @@ export function PenWriting({
       return;
     }
 
-    const delay = Math.max(12, Math.min(36, Math.round(18000 / Math.max(text.length, 1))));
+    const delay = text.length > 80 ? 16 : 18;
+    const step = Math.max(1, Math.ceil(text.length / 48));
     let i = 0;
     let interval = 0;
     const start = window.setTimeout(() => {
       interval = window.setInterval(() => {
-        i += 1;
+        i = Math.min(text.length, i + step);
         setCount(i);
         if (i >= text.length) window.clearInterval(interval);
       }, delay);
-    }, 250);
+    }, 80);
 
     return () => {
       window.clearTimeout(start);

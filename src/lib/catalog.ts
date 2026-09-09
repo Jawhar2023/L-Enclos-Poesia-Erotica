@@ -1,38 +1,31 @@
-import { getStore } from "@/lib/db";
+import { fetchPoemById, listApprovedCommunity, listPoems } from "@/lib/db";
 import type { Poem } from "@/types";
 
+function asPoem(p: Awaited<ReturnType<typeof listPoems>>[number], source: Poem["source"]): Poem {
+  return { ...p, source };
+}
+
 export async function getLibraryPoems(): Promise<Poem[]> {
-  const store = await getStore();
-  return store.poems.map((p) => ({
-    ...p,
-    source: "admin" as const,
-  }));
+  const poems = await listPoems();
+  return poems.map((p) => asPoem(p, "admin"));
 }
 
 export async function getCatalog(): Promise<Poem[]> {
-  const store = await getStore();
-  const library = store.poems.map((p) => ({
-    ...p,
-    source: "admin" as const,
-  }));
+  const [library, community] = await Promise.all([getLibraryPoems(), listApprovedCommunity()]);
   const known = new Set(library.map((p) => p.id));
-  const community: Poem[] = store.submissions
-    .filter((s) => s.status === "approved")
-    .map((s) => ({
-      id: `s-${s.id}`,
-      titleFr: s.titleFr,
-      titleAr: s.titleAr,
-      authorFr: s.author,
-      authorAr: s.author,
-      bodyFr: s.bodyFr,
-      bodyAr: s.bodyAr,
-      source: "community" as const,
-    }))
+  const extra: Poem[] = community
+    .map((p) => asPoem(p, "community"))
     .filter((p) => !known.has(p.id));
-  return [...library, ...community];
+  return [...library, ...extra];
 }
 
 export async function getPoem(id: string) {
-  const catalog = await getCatalog();
-  return catalog.find((p) => p.id === id);
+  const row = await fetchPoemById(id);
+  if (row) return asPoem(row, "admin");
+  if (id.startsWith("s-")) {
+    const community = await listApprovedCommunity();
+    const found = community.find((p) => p.id === id);
+    return found ? asPoem(found, "community") : undefined;
+  }
+  return undefined;
 }

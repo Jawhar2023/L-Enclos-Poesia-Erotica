@@ -19,8 +19,9 @@ export async function GET() {
     supabase: hasSupabase(),
     supabaseAdmin: hasSupabaseAdmin(),
     poems,
-    submissions: store.submissions,
+    submissions: [...store.submissions].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
     comments: [...store.comments].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    reactions: [...store.reactions].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || "")),
     stats: {
       poems: store.poems.length,
       likes: store.reactions.length,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin";
-import { removeComment } from "@/lib/db";
+import { removeReaction } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   }
   const { id } = await params;
   try {
-    await removeComment(id);
+    await removeReaction(id);
     return NextResponse.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "failed";

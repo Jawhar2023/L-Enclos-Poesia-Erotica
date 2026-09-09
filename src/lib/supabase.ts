@@ -24,13 +24,19 @@ export function hasSupabaseAdmin() {
   return Boolean(supabaseUrl() && secretKey());
 }
 
+let cached: SupabaseClient | null = null;
+let cachedKey = "";
+
 export function supabaseAdmin(): SupabaseClient {
   const url = supabaseUrl();
   const key = secretKey() || publicKey();
   if (!url || !key) {
     throw new Error("Supabase is not configured");
   }
-  return createClient(url, key, {
+  if (cached && cachedKey === `${url}:${key}`) return cached;
+  cachedKey = `${url}:${key}`;
+  cached = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+  return cached;
 }

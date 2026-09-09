@@ -5,9 +5,9 @@ import { Ornament } from "@/components/Ornament";
 import { PenWriting } from "@/components/PenWriting";
 import { ReactionBar } from "@/components/ReactionBar";
 import { useLang } from "@/context/LangContext";
-import type { Poem } from "@/types";
+import type { Comment, Poem } from "@/types";
 
-export function PoemView({ poem }: { poem: Poem }) {
+export function PoemView({ poem, comments = [] }: { poem: Poem; comments?: Comment[] }) {
   const { lang, d } = useLang();
   const title = lang === "ar" && poem.titleAr ? poem.titleAr : poem.titleFr;
   const author = lang === "ar" && poem.authorAr ? poem.authorAr : poem.authorFr;
@@ -67,7 +67,7 @@ export function PoemView({ poem }: { poem: Poem }) {
       <div className="mt-8">
         <ReactionBar poemId={poem.id} />
       </div>
-      <CommentSection poemId={poem.id} />
+      <CommentSection poemId={poem.id} initialComments={comments} />
     </article>
   );
 }

@@ -33,6 +33,7 @@ export type Reaction = {
   id: string;
   poemId: string;
   visitorId: string;
+  createdAt?: string;
 };
 
 export type Submission = {

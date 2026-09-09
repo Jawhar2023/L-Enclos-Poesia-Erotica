@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { CommentAvatar } from "@/components/CommentAvatar";
-import { SqlEditor } from "@/components/page-copy/SqlEditor";
 import { useLang } from "@/context/LangContext";
-import type { AdminPoem, Comment, Submission } from "@/types";
+import type { AdminPoem, Comment, Reaction, Submission } from "@/types";
 
 type PoemRow = AdminPoem & { likes: number; comments: number };
 
@@ -15,6 +14,7 @@ type Session = {
   poems?: PoemRow[];
   submissions?: Submission[];
   comments?: Comment[];
+  reactions?: Reaction[];
   stats?: {
     poems: number;
     likes: number;
@@ -46,7 +46,8 @@ export function AdminDesk() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [translating, setTranslating] = useState(false);
   const [translateMsg, setTranslateMsg] = useState("");
-  const [tab, setTab] = useState<"poems" | "inbox" | "comments" | "sql">("poems");
+  const [tab, setTab] = useState<"poems" | "inbox" | "likes" | "comments">("poems");
+  const [inboxFilter, setInboxFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
 
   async function refresh() {
     const res = await fetch("/api/admin/session");
@@ -163,6 +164,11 @@ export function AdminDesk() {
     refresh();
   }
 
+  async function removeLike(id: string) {
+    await fetch(`/api/admin/reactions/${id}`, { method: "DELETE" });
+    refresh();
+  }
+
   if (!session?.ok) {
     return (
       <form onSubmit={login} className="mx-auto w-full max-w-md rounded-[1.4rem] bg-paper p-5 shadow-sm sm:p-8">
@@ -185,13 +191,15 @@ export function AdminDesk() {
   const poems = session.poems || [];
   const submissions = session.submissions || [];
   const comments = session.comments || [];
-  const pending = submissions.filter((s) => s.status === "pending");
+  const reactions = session.reactions || [];
+  const inbox =
+    inboxFilter === "all" ? submissions : submissions.filter((s) => s.status === inboxFilter);
 
   const statCards = [
-    { label: d.adminStatsPoems, value: stats.poems, tone: "from-pistachio/70 to-paper" },
-    { label: d.adminStatsLikes, value: stats.likes, tone: "from-rose/70 to-paper" },
-    { label: d.adminStatsComments, value: stats.comments, tone: "from-sky/70 to-paper" },
-    { label: d.adminStatsVisitors, value: stats.visitors, tone: "from-butter/80 to-paper" },
+    { id: "poems" as const, label: d.adminStatsPoems, value: stats.poems, tone: "from-pistachio/70 to-paper" },
+    { id: "likes" as const, label: d.adminStatsLikes, value: stats.likes, tone: "from-rose/70 to-paper" },
+    { id: "comments" as const, label: d.adminStatsComments, value: stats.comments, tone: "from-sky/70 to-paper" },
+    { id: "inbox" as const, label: d.adminStatsVisitors, value: stats.visitors, tone: "from-butter/80 to-paper" },
   ];
 
   return (
@@ -205,10 +213,17 @@ export function AdminDesk() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {statCards.map((card) => (
-          <div key={card.label} className={`rounded-[1.3rem] bg-gradient-to-br ${card.tone} p-4 sm:p-5`}>
+          <button
+            key={card.label}
+            type="button"
+            onClick={() => setTab(card.id)}
+            className={`rounded-[1.3rem] bg-gradient-to-br ${card.tone} p-4 text-left sm:p-5 ${
+              tab === card.id ? "ring-2 ring-ink/20" : ""
+            }`}
+          >
             <p className="font-display text-xs uppercase tracking-[0.2em] text-ink/50">{card.label}</p>
             <p className="mt-2 font-display text-4xl">{card.value}</p>
-          </div>
+          </button>
         ))}
       </div>
       {stats.pending > 0 ? (
@@ -226,8 +241,8 @@ export function AdminDesk() {
           [
             ["poems", d.adminLibrary],
             ["inbox", d.adminPending],
+            ["likes", d.adminLikes],
             ["comments", d.adminComments],
-            ["sql", d.sqlTitle],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -308,27 +323,95 @@ export function AdminDesk() {
       {tab === "inbox" ? (
         <section className="rounded-[1.2rem] bg-paper p-4 sm:p-6">
           <h2 className="font-display text-xl sm:text-2xl">{d.adminPending}</h2>
+          <p className="mt-1 text-sm text-ink/55">{d.adminInboxHint}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {(
+              [
+                ["pending", d.adminStatsPending],
+                ["approved", d.approve],
+                ["rejected", d.reject],
+                ["all", d.adminInboxAll],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setInboxFilter(id)}
+                className={`rounded-full px-3 py-1.5 text-sm font-display ${
+                  inboxFilter === id ? "bg-ink text-paper" : "bg-cream text-ink/65"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <ul className="mt-4 space-y-4">
-            {pending.length === 0 ? (
+            {inbox.length === 0 ? (
               <li className="text-ink/50">{d.none}</li>
             ) : (
-              pending.map((s) => (
+              inbox.map((s) => (
                 <li key={s.id} className="min-w-0 rounded-xl bg-cream p-3 sm:p-4">
-                  <p className="break-words font-display text-lg">{s.titleFr || s.titleAr}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="break-words font-display text-lg">{s.titleFr || s.titleAr}</p>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[11px] ${
+                        s.status === "pending"
+                          ? "bg-butter/80"
+                          : s.status === "approved"
+                            ? "bg-pistachio/80"
+                            : "bg-rose/60"
+                      }`}
+                    >
+                      {s.status}
+                    </span>
+                  </div>
                   <p className="text-sm text-ink/55">{s.author}</p>
                   <pre className="mt-2 max-w-full overflow-x-auto whitespace-pre-wrap break-words text-sm">
                     {s.bodyFr || s.bodyAr}
                   </pre>
-                  <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                    <button onClick={() => decide(s.id, "approved")} className="w-full rounded-full bg-pistachio px-4 py-2.5 sm:w-auto sm:py-1">
-                      {d.approve}
-                    </button>
-                    <button onClick={() => decide(s.id, "rejected")} className="w-full rounded-full bg-rose/70 px-4 py-2.5 sm:w-auto sm:py-1">
-                      {d.reject}
-                    </button>
-                  </div>
+                  {s.status === "pending" ? (
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                      <button onClick={() => decide(s.id, "approved")} className="w-full rounded-full bg-pistachio px-4 py-2.5 sm:w-auto sm:py-1">
+                        {d.approve}
+                      </button>
+                      <button onClick={() => decide(s.id, "rejected")} className="w-full rounded-full bg-rose/70 px-4 py-2.5 sm:w-auto sm:py-1">
+                        {d.reject}
+                      </button>
+                    </div>
+                  ) : null}
                 </li>
               ))
+            )}
+          </ul>
+        </section>
+      ) : null}
+
+      {tab === "likes" ? (
+        <section className="rounded-[1.2rem] bg-paper p-4 sm:p-6">
+          <h2 className="font-display text-xl sm:text-2xl">{d.adminLikes}</h2>
+          <p className="mt-1 text-sm text-ink/55">{d.adminLikesHint}</p>
+          <ul className="mt-4 space-y-3">
+            {reactions.length === 0 ? (
+              <li className="text-ink/50">{d.none}</li>
+            ) : (
+              reactions.map((r) => {
+                const poem = poems.find((p) => p.id === r.poemId);
+                const title = lang === "ar" && poem?.titleAr ? poem.titleAr : poem?.titleFr || r.poemId;
+                return (
+                  <li key={r.id} className="flex min-w-0 flex-col gap-3 rounded-xl bg-cream p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
+                    <div className="min-w-0">
+                      <p className="font-display">{title}</p>
+                      <p className="truncate font-mono text-xs text-ink/50">{r.visitorId}</p>
+                    </div>
+                    <button
+                      onClick={() => removeLike(r.id)}
+                      className="w-full rounded-full border border-mist px-4 py-2 text-sm sm:w-auto sm:border-0 sm:underline sm:text-ink/50"
+                    >
+                      {d.delete}
+                    </button>
+                  </li>
+                );
+              })
             )}
           </ul>
         </section>
@@ -347,6 +430,9 @@ export function AdminDesk() {
                     <CommentAvatar id={c.avatar || c.id} size="sm" />
                     <div className="min-w-0">
                       <p className="font-display">{c.author.trim() || d.commentAnonymous}</p>
+                      <p className="text-[11px] text-ink/45">
+                        {poems.find((p) => p.id === c.poemId)?.titleFr || c.poemId}
+                      </p>
                       <p className="break-words text-sm text-ink/70">{c.body}</p>
                     </div>
                   </div>
@@ -362,8 +448,6 @@ export function AdminDesk() {
           </ul>
         </section>
       ) : null}
-
-      {tab === "sql" ? <SqlEditor connected={Boolean(session.supabaseAdmin)} /> : null}
     </div>
   );
 }

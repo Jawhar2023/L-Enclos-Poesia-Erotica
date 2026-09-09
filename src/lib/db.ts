@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { officialPoems } from "@/data/poems";
-import { hasSupabaseAdmin, supabaseAdmin } from "@/lib/supabase";
+import { hasSupabase, hasSupabaseAdmin, supabaseAdmin } from "@/lib/supabase";
 import type { AdminPoem, Comment, Reaction, StoreData, Submission } from "@/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -118,21 +118,31 @@ function poemToRow(p: AdminPoem) {
   };
 }
 
+let poemsCache: { at: number; poems: AdminPoem[] } | null = null;
+
+export function invalidatePoemsCache() {
+  poemsCache = null;
+}
+
 async function seedSupabase() {
   const db = supabaseAdmin();
   const { count, error } = await db.from("poems").select("id", { count: "exact", head: true });
   if (error) throw error;
   if (count && count > 0) return;
+  if (!hasSupabaseAdmin()) return;
   const json = readJsonStore();
   const poems = json.poems.length ? json.poems : officialAsAdmin();
-  await persistSupabase({
-    poems,
-    comments: json.comments || [],
-    reactions: json.reactions || [],
-    submissions: json.submissions || [],
-    adminPoems: [],
-    seeded: true,
-  });
+  await persistSupabase(
+    {
+      poems,
+      comments: json.comments || [],
+      reactions: json.reactions || [],
+      submissions: json.submissions || [],
+      adminPoems: [],
+      seeded: true,
+    },
+    { poems: [], comments: [], reactions: [], submissions: [] },
+  );
 }
 
 async function readSupabaseStore(): Promise<StoreData> {
@@ -151,18 +161,12 @@ async function readSupabaseStore(): Promise<StoreData> {
 
   return {
     poems: (poems.data || []).map((row) => poemFromRow(row as Record<string, unknown>)),
-    comments: (comments.data || []).map((row) => ({
-      id: String(row.id),
-      poemId: String(row.poem_id),
-      author: String(row.author || ""),
-      body: String(row.body || ""),
-      createdAt: String(row.created_at),
-      avatar: row.avatar ? String(row.avatar) : undefined,
-    })),
+    comments: (comments.data || []).map((row) => commentFromRow(row as Record<string, unknown>)),
     reactions: (reactions.data || []).map((row) => ({
       id: String(row.id),
       poemId: String(row.poem_id),
       visitorId: String(row.visitor_id),
+      createdAt: row.created_at ? String(row.created_at) : undefined,
     })),
     submissions: (submissions.data || []).map((row) => ({
       id: String(row.id),
@@ -179,17 +183,63 @@ async function readSupabaseStore(): Promise<StoreData> {
   };
 }
 
-async function persistSupabase(store: StoreData) {
-  const db = supabaseAdmin();
-  const poemRows = store.poems.map(poemToRow);
-  const commentRows = store.comments.map((c: Comment) => ({
+type IdSets = {
+  poems: Set<string>;
+  comments: Set<string>;
+  reactions: Set<string>;
+  submissions: Set<string>;
+};
+
+function snapshotIds(store: StoreData): IdSets {
+  return {
+    poems: new Set(store.poems.map((p) => p.id)),
+    comments: new Set(store.comments.map((c) => c.id)),
+    reactions: new Set(store.reactions.map((r) => r.id)),
+    submissions: new Set(store.submissions.map((s) => s.id)),
+  };
+}
+
+function removedIds(before: IdSets, store: StoreData) {
+  const after = snapshotIds(store);
+  const gone = (key: keyof IdSets) => [...before[key]].filter((id) => !after[key].has(id));
+  return {
+    poems: gone("poems"),
+    comments: gone("comments"),
+    reactions: gone("reactions"),
+    submissions: gone("submissions"),
+  };
+}
+
+function commentFromRow(row: Record<string, unknown>): Comment {
+  return {
+    id: String(row.id),
+    poemId: String(row.poem_id),
+    author: String(row.author || ""),
+    body: String(row.body || ""),
+    createdAt: String(row.created_at),
+    avatar: row.avatar ? String(row.avatar) : undefined,
+  };
+}
+
+function commentToRow(c: Comment) {
+  return {
     id: c.id,
     poem_id: c.poemId,
     author: c.author,
     body: c.body,
     avatar: c.avatar || null,
     created_at: c.createdAt,
-  }));
+  };
+}
+
+function throwIfError(error: { message: string } | null) {
+  if (error) throw new Error(error.message);
+}
+
+async function persistSupabase(store: StoreData, removed: ReturnType<typeof removedIds>) {
+  const db = supabaseAdmin();
+  const poemRows = store.poems.map(poemToRow);
+  const commentRows = store.comments.map(commentToRow);
   const reactionRows = store.reactions.map((r: Reaction) => ({
     id: r.id,
     poem_id: r.poemId,
@@ -206,45 +256,283 @@ async function persistSupabase(store: StoreData) {
     created_at: s.createdAt,
   }));
 
-  const ids = {
-    poems: new Set(store.poems.map((p) => p.id)),
-    comments: new Set(store.comments.map((c) => c.id)),
-    reactions: new Set(store.reactions.map((r) => r.id)),
-    submissions: new Set(store.submissions.map((s) => s.id)),
+  const del = async (table: keyof typeof removed) => {
+    if (!removed[table].length) return;
+    const { error } = await db.from(table).delete().in("id", removed[table]);
+    throwIfError(error);
   };
 
-  const [existingPoems, existingComments, existingReactions, existingSubs] = await Promise.all([
-    db.from("poems").select("id"),
-    db.from("comments").select("id"),
-    db.from("reactions").select("id"),
-    db.from("submissions").select("id"),
-  ]);
+  await del("comments");
+  await del("reactions");
+  await del("submissions");
+  await del("poems");
 
-  const del = async (table: keyof typeof ids, rows: { id: string }[] | null) => {
-    const gone = (rows || []).map((r) => r.id).filter((id) => !ids[table].has(id));
-    if (gone.length) await db.from(table).delete().in("id", gone);
+  const upsert = async (table: string, rows: object[]) => {
+    if (!rows.length) return;
+    const { error } = await db.from(table).upsert(rows);
+    throwIfError(error);
   };
 
-  await del("comments", existingComments.data);
-  await del("reactions", existingReactions.data);
-  await del("submissions", existingSubs.data);
-  await del("poems", existingPoems.data);
+  await upsert("poems", poemRows);
+  await upsert("comments", commentRows);
+  await upsert("reactions", reactionRows);
+  await upsert("submissions", submissionRows);
+}
 
-  if (poemRows.length) await db.from("poems").upsert(poemRows);
-  if (commentRows.length) await db.from("comments").upsert(commentRows);
-  if (reactionRows.length) await db.from("reactions").upsert(reactionRows);
-  if (submissionRows.length) await db.from("submissions").upsert(submissionRows);
+async function ensurePoemRow(poemId: string) {
+  const db = supabaseAdmin();
+  const existing = await db.from("poems").select("id").eq("id", poemId).maybeSingle();
+  if (existing.error && existing.error.code !== "PGRST116") throwIfError(existing.error);
+  if (existing.data?.id) return;
+
+  const json = readJsonStore();
+  const extras: AdminPoem[] = (json.adminPoems || []).map((p) => ({
+    ...p,
+    id: p.id.startsWith("a-") ? p.id : `a-${p.id}`,
+  }));
+  const poem =
+    json.poems.find((p) => p.id === poemId) ||
+    officialAsAdmin().find((p) => p.id === poemId) ||
+    extras.find((p) => p.id === poemId);
+
+  if (poem) {
+    const { error } = await db.from("poems").upsert(poemToRow(poem));
+    throwIfError(error);
+    return;
+  }
+
+  if (poemId.startsWith("s-")) {
+    const sub = await db.from("submissions").select("*").eq("id", poemId.slice(2)).maybeSingle();
+    throwIfError(sub.error);
+    if (sub.data) {
+      const { error } = await db.from("poems").upsert({
+        id: poemId,
+        title_fr: String(sub.data.title_fr || ""),
+        title_ar: String(sub.data.title_ar || ""),
+        author_fr: String(sub.data.author || ""),
+        author_ar: String(sub.data.author || ""),
+        body_fr: String(sub.data.body_fr || ""),
+        body_ar: String(sub.data.body_ar || ""),
+        featured: false,
+        created_at: sub.data.created_at,
+      });
+      throwIfError(error);
+      return;
+    }
+  }
+
+  const { error } = await db.from("poems").insert({
+    id: poemId,
+    title_fr: "",
+    title_ar: "",
+    author_fr: "",
+    author_ar: "",
+    body_fr: "",
+    body_ar: "",
+  });
+  if (error && !/duplicate|already exists/i.test(error.message)) throwIfError(error);
 }
 
 export async function getStore() {
-  if (hasSupabaseAdmin()) return readSupabaseStore();
+  if (hasSupabase()) return readSupabaseStore();
   return readJsonStore();
+}
+
+export async function listPoems(): Promise<AdminPoem[]> {
+  if (!hasSupabase()) return readJsonStore().poems;
+  if (poemsCache && Date.now() - poemsCache.at < 20_000) return poemsCache.poems;
+  const { data, error } = await supabaseAdmin()
+    .from("poems")
+    .select("*")
+    .order("created_at", { ascending: true });
+  throwIfError(error);
+  const poems = (data || []).map((row) => poemFromRow(row as Record<string, unknown>));
+  poemsCache = { at: Date.now(), poems };
+  return poems;
+}
+
+export async function fetchPoemById(id: string): Promise<AdminPoem | undefined> {
+  if (!hasSupabase()) return readJsonStore().poems.find((p) => p.id === id);
+  const { data, error } = await supabaseAdmin().from("poems").select("*").eq("id", id).maybeSingle();
+  if (error && error.code !== "PGRST116") throwIfError(error);
+  return data ? poemFromRow(data as Record<string, unknown>) : undefined;
+}
+
+export async function listApprovedCommunity(): Promise<AdminPoem[]> {
+  if (!hasSupabase()) {
+    return readJsonStore()
+      .submissions.filter((s) => s.status === "approved")
+      .map((s) => ({
+        id: `s-${s.id}`,
+        titleFr: s.titleFr,
+        titleAr: s.titleAr,
+        authorFr: s.author,
+        authorAr: s.author,
+        bodyFr: s.bodyFr,
+        bodyAr: s.bodyAr,
+        createdAt: s.createdAt,
+      }));
+  }
+  const { data, error } = await supabaseAdmin()
+    .from("submissions")
+    .select("id, author, title_fr, title_ar, body_fr, body_ar, created_at")
+    .eq("status", "approved");
+  throwIfError(error);
+  return (data || []).map((s) => ({
+    id: `s-${s.id}`,
+    titleFr: String(s.title_fr || ""),
+    titleAr: String(s.title_ar || ""),
+    authorFr: String(s.author || ""),
+    authorAr: String(s.author || ""),
+    bodyFr: String(s.body_fr || ""),
+    bodyAr: String(s.body_ar || ""),
+    createdAt: String(s.created_at || new Date().toISOString()),
+  }));
+}
+
+export async function listComments(poemId: string): Promise<Comment[]> {
+  if (hasSupabase()) {
+    const { data, error } = await supabaseAdmin()
+      .from("comments")
+      .select("*")
+      .eq("poem_id", poemId)
+      .order("created_at", { ascending: false });
+    throwIfError(error);
+    return (data || []).map((row) => commentFromRow(row as Record<string, unknown>));
+  }
+  return readJsonStore()
+    .comments.filter((c) => c.poemId === poemId)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function addComment(comment: Comment) {
+  if (hasSupabase()) {
+    const db = supabaseAdmin();
+    const first = await db.from("comments").insert(commentToRow(comment));
+    if (first.error) {
+      await ensurePoemRow(comment.poemId);
+      const { error } = await db.from("comments").insert(commentToRow(comment));
+      throwIfError(error);
+    }
+    return comment;
+  }
+  const store = readJsonStore();
+  store.comments.push(comment);
+  writeJsonStore(store);
+  return comment;
+}
+
+export async function removeComment(id: string) {
+  if (hasSupabaseAdmin()) {
+    const { error } = await supabaseAdmin().from("comments").delete().eq("id", id);
+    throwIfError(error);
+    return;
+  }
+  const store = readJsonStore();
+  store.comments = store.comments.filter((c) => c.id !== id);
+  writeJsonStore(store);
+}
+
+export async function removeReaction(id: string) {
+  if (hasSupabase()) {
+    const { error } = await supabaseAdmin().from("reactions").delete().eq("id", id);
+    throwIfError(error);
+    return;
+  }
+  const store = readJsonStore();
+  store.reactions = store.reactions.filter((r) => r.id !== id);
+  writeJsonStore(store);
+}
+
+export async function getReactionState(poemId: string, visitorId: string) {
+  if (hasSupabase()) {
+    const { data, error } = await supabaseAdmin()
+      .from("reactions")
+      .select("visitor_id")
+      .eq("poem_id", poemId);
+    throwIfError(error);
+    const rows = data || [];
+    return {
+      count: rows.length,
+      mine: rows.some((row) => String(row.visitor_id) === visitorId),
+    };
+  }
+  const all = readJsonStore().reactions.filter((r) => r.poemId === poemId);
+  return {
+    count: all.length,
+    mine: all.some((r) => r.visitorId === visitorId),
+  };
+}
+
+export async function toggleReaction(poemId: string, visitorId: string) {
+  if (hasSupabase()) {
+    const db = supabaseAdmin();
+    const listed = await db.from("reactions").select("id, visitor_id").eq("poem_id", poemId);
+    throwIfError(listed.error);
+    const rows = listed.data || [];
+    const mine = rows.find((row) => String(row.visitor_id) === visitorId);
+
+    if (mine) {
+      const { error } = await db.from("reactions").delete().eq("id", mine.id);
+      throwIfError(error);
+      return { count: Math.max(0, rows.length - 1), mine: false };
+    }
+
+    const inserted = await db.from("reactions").insert({
+      id: uid(),
+      poem_id: poemId,
+      visitor_id: visitorId,
+    });
+    if (inserted.error) {
+      await ensurePoemRow(poemId);
+      const { error } = await db.from("reactions").insert({
+        id: uid(),
+        poem_id: poemId,
+        visitor_id: visitorId,
+      });
+      throwIfError(error);
+    }
+    return { count: rows.length + 1, mine: true };
+  }
+
+  const store = readJsonStore();
+  const i = store.reactions.findIndex((r) => r.poemId === poemId && r.visitorId === visitorId);
+  if (i >= 0) store.reactions.splice(i, 1);
+  else store.reactions.push({ id: uid(), poemId, visitorId });
+  writeJsonStore(store);
+  const all = store.reactions.filter((r) => r.poemId === poemId);
+  return { count: all.length, mine: all.some((r) => r.visitorId === visitorId) };
+}
+
+export async function addSubmission(entry: Submission) {
+  if (hasSupabase()) {
+    const { error } = await supabaseAdmin().from("submissions").insert({
+      id: entry.id,
+      author: entry.author,
+      title_fr: entry.titleFr,
+      title_ar: entry.titleAr,
+      body_fr: entry.bodyFr,
+      body_ar: entry.bodyAr,
+      status: entry.status,
+      created_at: entry.createdAt,
+    });
+    throwIfError(error);
+    return;
+  }
+  const store = readJsonStore();
+  store.submissions.push(entry);
+  writeJsonStore(store);
 }
 
 export async function mutateStore<T>(fn: (store: StoreData) => T): Promise<T> {
   const store = await getStore();
+  const before = snapshotIds(store);
   const result = fn(store);
-  if (hasSupabaseAdmin()) await persistSupabase(store);
-  else writeJsonStore(store);
+  if (hasSupabaseAdmin()) {
+    await persistSupabase(store, removedIds(before, store));
+    invalidatePoemsCache();
+  } else if (hasSupabase()) {
+    throw new Error("Admin writes need SUPABASE_SECRET_KEY");
+  } else writeJsonStore(store);
   return result;
 }
