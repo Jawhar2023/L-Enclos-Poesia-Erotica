@@ -25,15 +25,15 @@ export function PoetFeature() {
             </div>
           </div>
           <div>
-            <p className="font-display text-[11px] uppercase tracking-[0.35em] text-ink/45">
+            <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-black">
               {d.poetSection}
             </p>
-            <h2 className="mt-3 font-display text-5xl leading-tight sm:text-6xl">{d.poetName}</h2>
-            <div className="gold-rule my-6 h-px w-28" />
-            <p className="max-w-xl text-lg leading-8 text-ink/75">{d.poetLead}</p>
+            <h2 className="mt-3 font-display text-5xl font-bold leading-tight sm:text-6xl text-black">{d.poetName}</h2>
+            <div className="gold-rule my-6 h-0.5 w-32 bg-black/40" />
+            <p className="max-w-xl text-xl font-medium leading-9 text-black">{d.poetLead}</p>
             <Link
               href="/poete"
-              className="mt-8 inline-flex rounded-full bg-butter px-6 py-2.5 font-display hover:bg-butter/80"
+              className="mt-8 inline-flex rounded-full border-2 border-black bg-butter px-7 py-3 font-display text-lg font-bold text-black hover:bg-butter/80 transition"
             >
               {d.poetMore}
             </Link>

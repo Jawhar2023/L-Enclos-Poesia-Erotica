@@ -18,39 +18,39 @@ export function PoemView({ poem, comments = [] }: { poem: Poem; comments?: Comme
 
   return (
     <article>
-      <p className="font-display text-sm text-ink/55">{author}</p>
-      <h1 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">
+      <p className="font-display text-base font-bold uppercase tracking-wider text-black">{author}</p>
+      <h1 className="mt-2 font-display text-5xl font-bold leading-tight sm:text-6xl text-black">
         <PenWriting
           key={`title-${poem.id}-${lang}`}
           text={title}
           rtl={lang === "ar"}
-          className="font-display text-4xl leading-tight sm:text-5xl"
+          className="font-display text-5xl font-bold leading-tight sm:text-6xl text-black"
         />
       </h1>
       {poem.translatorFr ? (
-        <p className="mt-3 text-ink/60">
+        <p className="mt-3 text-lg font-bold text-black">
           {d.translator} : {lang === "ar" ? poem.translatorAr : poem.translatorFr}
         </p>
       ) : null}
       <Ornament className="my-6 justify-start" />
-      {intro ? <p className="max-w-2xl text-lg italic text-ink/70">{intro}</p> : null}
-      {dedication ? <p className="mt-3 font-display text-lg">{dedication}</p> : null}
+      {intro ? <p className="max-w-2xl text-xl font-medium italic text-black">{intro}</p> : null}
+      {dedication ? <p className="mt-3 font-display text-xl font-bold text-black">{dedication}</p> : null}
 
       <div className={`mt-10 grid gap-8 ${hasBoth ? "lg:grid-cols-2" : ""}`}>
         {poem.bodyFr ? (
-          <div className="alcove rounded-[1.6rem] p-7" dir="ltr">
+          <div className="alcove rounded-[1.6rem] border-2 border-black/15 bg-paper p-8 shadow-sm" dir="ltr">
             {hasBoth ? (
-              <p className="mb-3 font-display text-xs uppercase tracking-[0.2em] text-ink/40">
+              <p className="mb-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
                 {d.original} FR
               </p>
             ) : null}
-            <PenWriting key={`fr-${poem.id}`} text={poem.bodyFr} className="font-display text-xl leading-9" />
+            <PenWriting key={`fr-${poem.id}`} text={poem.bodyFr} className="font-display text-2xl font-bold leading-10 text-black" />
           </div>
         ) : null}
         {poem.bodyAr ? (
-          <div className="alcove rounded-[1.6rem] p-7" dir="rtl">
+          <div className="alcove rounded-[1.6rem] border-2 border-black/15 bg-paper p-8 shadow-sm" dir="rtl">
             {hasBoth ? (
-              <p className="mb-3 font-display text-xs uppercase tracking-[0.2em] text-ink/40">
+              <p className="mb-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
                 {d.original} ع
               </p>
             ) : null}
@@ -58,12 +58,12 @@ export function PoemView({ poem, comments = [] }: { poem: Poem; comments?: Comme
               key={`ar-${poem.id}`}
               text={poem.bodyAr}
               rtl
-              className="font-poem-ar text-xl leading-10"
+              className="font-poem-ar text-2xl font-bold leading-[2.5rem] text-black"
             />
           </div>
         ) : null}
       </div>
-      {place ? <p className="mt-6 text-sm text-ink/50">{place}</p> : null}
+      {place ? <p className="mt-6 text-base font-semibold text-black">{place}</p> : null}
       <div className="mt-8">
         <ReactionBar poemId={poem.id} />
       </div>

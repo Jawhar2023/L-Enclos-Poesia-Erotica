@@ -162,10 +162,12 @@ html[dir="rtl"] .portrait-track {
 .nav-label {
   display: inline-block;
   padding-bottom: 0.28rem;
-  border-bottom: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
 }
 
-.nav-label.is-active {
+.nav-label.is-active,
+.nav-label:hover {
   border-bottom-color: #c9b48a;
 }
 

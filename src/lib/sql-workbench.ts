@@ -129,8 +129,8 @@ order by created_at desc;`,
     group: "submissions",
     labelFr: "Poèmes acceptés",
     labelAr: "القصائد المقبولة",
-    hintFr: "Voix du salon déjà admises.",
-    hintAr: "أصوات الصالون التي قُبلت.",
+    hintFr: "Voix du jardin déjà admises.",
+    hintAr: "أصوات الحديقة التي قُبلت.",
     sql: `select created_at, author, title_fr, title_ar, id
 from submissions
 where status = 'approved'
@@ -198,8 +198,8 @@ order by title_fr;`,
     group: "config",
     labelFr: "Schéma des tables",
     labelAr: "مخطط الجداول",
-    hintFr: "Colonnes PostgreSQL du salon.",
-    hintAr: "أعمدة PostgreSQL للصالون.",
+    hintFr: "Colonnes PostgreSQL du jardin.",
+    hintAr: "أعمدة PostgreSQL للحديقة.",
     sql: `select table_name, column_name, data_type, is_nullable, column_default
 from information_schema.columns
 where table_schema = 'public'

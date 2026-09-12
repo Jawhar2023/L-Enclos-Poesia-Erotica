@@ -54,15 +54,15 @@ export function ReactionBar({ poemId }: { poemId: string }) {
         type="button"
         onClick={toggle}
         disabled={busy}
-        className={`rounded-full border px-4 py-2 font-display text-sm transition disabled:opacity-60 ${
+        className={`rounded-full border-2 px-5 py-2.5 font-display text-base font-bold transition disabled:opacity-60 ${
           mine
-            ? "border-rose bg-rose/70 text-ink"
-            : "border-rose/50 bg-paper hover:bg-rose/30"
+            ? "border-black bg-rose text-black shadow-sm scale-105"
+            : "border-black/30 bg-paper text-black hover:border-black hover:bg-rose/40"
         }`}
       >
         ♥ {d.heart}
       </button>
-      <span className="text-sm text-ink/60">{count}</span>
+      <span className="text-lg font-bold text-black">{count}</span>
     </div>
   );
 }

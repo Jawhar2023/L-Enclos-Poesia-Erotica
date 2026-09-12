@@ -125,62 +125,76 @@ export function invalidatePoemsCache() {
 }
 
 async function seedSupabase() {
-  const db = supabaseAdmin();
-  const { count, error } = await db.from("poems").select("id", { count: "exact", head: true });
-  if (error) throw error;
-  if (count && count > 0) return;
-  if (!hasSupabaseAdmin()) return;
-  const json = readJsonStore();
-  const poems = json.poems.length ? json.poems : officialAsAdmin();
-  await persistSupabase(
-    {
-      poems,
-      comments: json.comments || [],
-      reactions: json.reactions || [],
-      submissions: json.submissions || [],
-      adminPoems: [],
-      seeded: true,
-    },
-    { poems: [], comments: [], reactions: [], submissions: [] },
-  );
+  try {
+    const db = supabaseAdmin();
+    const { count, error } = await db.from("poems").select("id", { count: "exact", head: true });
+    if (error) {
+      console.warn("Supabase seed check notice:", error.message);
+      return;
+    }
+    if (count && count > 0) return;
+    if (!hasSupabaseAdmin()) return;
+    const json = readJsonStore();
+    const poems = json.poems.length ? json.poems : officialAsAdmin();
+    await persistSupabase(
+      {
+        poems,
+        comments: json.comments || [],
+        reactions: json.reactions || [],
+        submissions: json.submissions || [],
+        adminPoems: [],
+        seeded: true,
+      },
+      { poems: [], comments: [], reactions: [], submissions: [] },
+    );
+  } catch (err) {
+    console.warn("Supabase seed error, continuing with local store:", err);
+  }
 }
 
 async function readSupabaseStore(): Promise<StoreData> {
-  await seedSupabase();
-  const db = supabaseAdmin();
-  const [poems, comments, reactions, submissions] = await Promise.all([
-    db.from("poems").select("*").order("created_at", { ascending: true }),
-    db.from("comments").select("*").order("created_at", { ascending: false }),
-    db.from("reactions").select("*"),
-    db.from("submissions").select("*").order("created_at", { ascending: false }),
-  ]);
-  if (poems.error) throw poems.error;
-  if (comments.error) throw comments.error;
-  if (reactions.error) throw reactions.error;
-  if (submissions.error) throw submissions.error;
+  try {
+    await seedSupabase();
+    const db = supabaseAdmin();
+    const [poems, comments, reactions, submissions] = await Promise.all([
+      db.from("poems").select("*").order("created_at", { ascending: true }),
+      db.from("comments").select("*").order("created_at", { ascending: false }),
+      db.from("reactions").select("*"),
+      db.from("submissions").select("*").order("created_at", { ascending: false }),
+    ]);
 
-  return {
-    poems: (poems.data || []).map((row) => poemFromRow(row as Record<string, unknown>)),
-    comments: (comments.data || []).map((row) => commentFromRow(row as Record<string, unknown>)),
-    reactions: (reactions.data || []).map((row) => ({
-      id: String(row.id),
-      poemId: String(row.poem_id),
-      visitorId: String(row.visitor_id),
-      createdAt: row.created_at ? String(row.created_at) : undefined,
-    })),
-    submissions: (submissions.data || []).map((row) => ({
-      id: String(row.id),
-      author: String(row.author || ""),
-      titleFr: String(row.title_fr || ""),
-      titleAr: String(row.title_ar || ""),
-      bodyFr: String(row.body_fr || ""),
-      bodyAr: String(row.body_ar || ""),
-      status: (row.status as Submission["status"]) || "pending",
-      createdAt: String(row.created_at),
-    })),
-    adminPoems: [],
-    seeded: true,
-  };
+    if (poems.error || comments.error || reactions.error || submissions.error) {
+      const err = poems.error || comments.error || reactions.error || submissions.error;
+      console.warn("Supabase read error, using local JSON store fallback:", err?.message);
+      return readJsonStore();
+    }
+
+    return {
+      poems: (poems.data || []).map((row) => poemFromRow(row as Record<string, unknown>)),
+      comments: (comments.data || []).map((row) => commentFromRow(row as Record<string, unknown>)),
+      reactions: (reactions.data || []).map((row) => ({
+        id: String(row.id),
+        poemId: String(row.poem_id),
+        visitorId: String(row.visitor_id),
+        createdAt: row.created_at ? String(row.created_at) : undefined,
+      })),
+      submissions: (submissions.data || []).map((row) => ({
+        id: String(row.id),
+        author: String(row.author || ""),
+        titleFr: String(row.title_fr || ""),
+        titleAr: String(row.title_ar || ""),
+        bodyFr: String(row.body_fr || ""),
+        bodyAr: String(row.body_ar || ""),
+        status: (row.status as Submission["status"]) || "pending",
+        createdAt: String(row.created_at),
+      })),
+      adminPoems: [],
+      seeded: true,
+    };
+  } catch (err) {
+    console.warn("Supabase read exception, using local JSON store fallback:", err);
+    return readJsonStore();
+  }
 }
 
 type IdSets = {
@@ -233,7 +247,12 @@ function commentToRow(c: Comment) {
 }
 
 function throwIfError(error: { message: string } | null) {
-  if (error) throw new Error(error.message);
+  if (!error) return;
+  if (/JWT issued at future/i.test(error.message)) {
+    console.warn("Supabase clock skew notice:", error.message);
+    return;
+  }
+  throw new Error(error.message);
 }
 
 async function persistSupabase(store: StoreData, removed: ReturnType<typeof removedIds>) {
@@ -341,26 +360,41 @@ export async function getStore() {
 export async function listPoems(): Promise<AdminPoem[]> {
   if (!hasSupabase()) return readJsonStore().poems;
   if (poemsCache && Date.now() - poemsCache.at < 20_000) return poemsCache.poems;
-  const { data, error } = await supabaseAdmin()
-    .from("poems")
-    .select("*")
-    .order("created_at", { ascending: true });
-  throwIfError(error);
-  const poems = (data || []).map((row) => poemFromRow(row as Record<string, unknown>));
-  poemsCache = { at: Date.now(), poems };
-  return poems;
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("poems")
+      .select("*")
+      .order("created_at", { ascending: true });
+    if (error) {
+      console.warn("Supabase listPoems warning, using local store:", error.message);
+      return readJsonStore().poems;
+    }
+    const poems = (data || []).map((row) => poemFromRow(row as Record<string, unknown>));
+    poemsCache = { at: Date.now(), poems };
+    return poems;
+  } catch (err) {
+    console.warn("Supabase listPoems exception, using local store:", err);
+    return readJsonStore().poems;
+  }
 }
 
 export async function fetchPoemById(id: string): Promise<AdminPoem | undefined> {
   if (!hasSupabase()) return readJsonStore().poems.find((p) => p.id === id);
-  const { data, error } = await supabaseAdmin().from("poems").select("*").eq("id", id).maybeSingle();
-  if (error && error.code !== "PGRST116") throwIfError(error);
-  return data ? poemFromRow(data as Record<string, unknown>) : undefined;
+  try {
+    const { data, error } = await supabaseAdmin().from("poems").select("*").eq("id", id).maybeSingle();
+    if (error && error.code !== "PGRST116" && !/JWT issued at future/i.test(error.message)) {
+      console.warn("Supabase fetchPoemById notice:", error.message);
+      return readJsonStore().poems.find((p) => p.id === id);
+    }
+    return data ? poemFromRow(data as Record<string, unknown>) : readJsonStore().poems.find((p) => p.id === id);
+  } catch {
+    return readJsonStore().poems.find((p) => p.id === id);
+  }
 }
 
 export async function listApprovedCommunity(): Promise<AdminPoem[]> {
-  if (!hasSupabase()) {
-    return readJsonStore()
+  const fallback = () =>
+    readJsonStore()
       .submissions.filter((s) => s.status === "approved")
       .map((s) => ({
         id: `s-${s.id}`,
@@ -372,33 +406,46 @@ export async function listApprovedCommunity(): Promise<AdminPoem[]> {
         bodyAr: s.bodyAr,
         createdAt: s.createdAt,
       }));
+  if (!hasSupabase()) return fallback();
+  try {
+    const { data, error } = await supabaseAdmin()
+      .from("submissions")
+      .select("id, author, title_fr, title_ar, body_fr, body_ar, created_at")
+      .eq("status", "approved");
+    if (error) {
+      console.warn("Supabase listApprovedCommunity notice:", error.message);
+      return fallback();
+    }
+    return (data || []).map((s) => ({
+      id: `s-${s.id}`,
+      titleFr: String(s.title_fr || ""),
+      titleAr: String(s.title_ar || ""),
+      authorFr: String(s.author || ""),
+      authorAr: String(s.author || ""),
+      bodyFr: String(s.body_fr || ""),
+      bodyAr: String(s.body_ar || ""),
+      createdAt: String(s.created_at || new Date().toISOString()),
+    }));
+  } catch {
+    return fallback();
   }
-  const { data, error } = await supabaseAdmin()
-    .from("submissions")
-    .select("id, author, title_fr, title_ar, body_fr, body_ar, created_at")
-    .eq("status", "approved");
-  throwIfError(error);
-  return (data || []).map((s) => ({
-    id: `s-${s.id}`,
-    titleFr: String(s.title_fr || ""),
-    titleAr: String(s.title_ar || ""),
-    authorFr: String(s.author || ""),
-    authorAr: String(s.author || ""),
-    bodyFr: String(s.body_fr || ""),
-    bodyAr: String(s.body_ar || ""),
-    createdAt: String(s.created_at || new Date().toISOString()),
-  }));
 }
 
 export async function listComments(poemId: string): Promise<Comment[]> {
   if (hasSupabase()) {
-    const { data, error } = await supabaseAdmin()
-      .from("comments")
-      .select("*")
-      .eq("poem_id", poemId)
-      .order("created_at", { ascending: false });
-    throwIfError(error);
-    return (data || []).map((row) => commentFromRow(row as Record<string, unknown>));
+    try {
+      const { data, error } = await supabaseAdmin()
+        .from("comments")
+        .select("*")
+        .eq("poem_id", poemId)
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row) => commentFromRow(row as Record<string, unknown>));
+      }
+      console.warn("Supabase listComments notice:", error?.message);
+    } catch (err) {
+      console.warn("Supabase listComments exception:", err);
+    }
   }
   return readJsonStore()
     .comments.filter((c) => c.poemId === poemId)

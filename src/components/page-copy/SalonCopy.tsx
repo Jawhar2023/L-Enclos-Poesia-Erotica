@@ -9,18 +9,18 @@ export function SalonCopy() {
 
   return (
     <article>
-      <p className="font-display text-xs uppercase tracking-[0.3em] text-ink/50">
+      <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-black">
         {fr ? "1620 — 1705" : "١٦٢٠ — ١٧٠٥"}
       </p>
-      <h1 className="mt-2 font-display text-4xl sm:text-5xl">
-        {fr ? "Le salon d'Anne de Lenclos" : "صالون آن دو لنكلو"}
+      <h1 className="mt-2 font-display text-4xl font-bold sm:text-6xl text-black">
+        {fr ? "Le jardin d'Anne de Lenclos" : "حديقة آن دو لنكلو"}
       </h1>
       <Ornament className="my-6 justify-start" />
-      <div className="space-y-5 text-lg leading-8 text-ink/80">
+      <div className="space-y-6 text-xl font-medium leading-9 text-black">
         <p>
           {fr
-            ? "Anne, dite Ninon de Lenclos (ou de l'Enclos), baptisée à Paris le 10 novembre 1620 et morte le 17 octobre 1705, fut courtisane, femme d'esprit, épistolière et femme de lettres. Aristocrate cultivée et indépendante, elle anima un salon rue des Tournelles qui réunissait les grands esprits de son siècle."
-            : "آن، الملقّبة نينون دو لنكلو، عُمّدت في باريس في 10 نوفمبر 1620 وتوفيت في 17 أكتوبر 1705. كانت سيدة صالون، كاتبة رسائل، وامرأة أدب حرّة. أرستقراطية مثقفة مستقلة، أدارت صالوناً في شارع تورنيل جمع كبار عقول عصرها."}
+            ? "Anne, dite Ninon de Lenclos (ou de l'Enclos), baptisée à Paris le 10 novembre 1620 et morte le 17 octobre 1705, fut courtisane, femme d'esprit, épistolière et femme de lettres. Aristocrate cultivée et indépendante, elle anima un jardin rue des Tournelles qui réunissait les grands esprits de son siècle."
+            : "آن، الملقّبة نينون دو لنكلو، عُمّدت في باريس في 10 نوفمبر 1620 وتوفيت في 17 أكتوبر 1705. كانت سيدة حديقة، كاتبة رسائل، وامرأة أدب حرّة. أرستقراطية مثقفة مستقلة، أدارت حديقة في شارع تورنيل جمع كبار عقول عصرها."}
         </p>
         <p>
           {fr
@@ -29,8 +29,8 @@ export function SalonCopy() {
         </p>
         <p>
           {fr
-            ? "L'Enclos reprend ce geste : un jardin clos où la poésie amoureuse et érotique se lit sans fausse pudeur, dans la lumière pastel d'un salon."
-            : "يستعيد الإنكلوس هذه الإشارة: حديقة مغلقة تُقرأ فيها قصيدة العشق والجسد بلا رياء، في ضوء صالون باستيل."}
+            ? "L'Enclos reprend ce geste : un jardin clos où la poésie amoureuse et érotique se lit sans fausse pudeur, dans la lumière pastel d'un jardin."
+            : "يستعيد لنكلو هذه الإشارة: حديقة مغلقة تُقرأ فيها قصيدة العشق والجسد بلا رياء، في ضوء حديقة باستيل."}
         </p>
       </div>
     </article>

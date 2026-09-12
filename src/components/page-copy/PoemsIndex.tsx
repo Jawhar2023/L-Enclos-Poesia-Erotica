@@ -10,11 +10,11 @@ export function PoemsIndex({ poems }: { poems: Poem[] }) {
   const { d, lang } = useLang();
   return (
     <div>
-      <h1 className="mx-auto max-w-3xl text-center font-display text-4xl sm:text-5xl">
+      <h1 className="mx-auto max-w-3xl text-center font-display text-5xl font-bold sm:text-6xl text-black">
         <PenWriting
           text={d.poemsTitle}
           rtl={lang === "ar"}
-          className="font-display text-4xl sm:text-5xl"
+          className="font-display text-5xl font-bold sm:text-6xl text-black"
         />
       </h1>
       <Ornament className="my-6" />

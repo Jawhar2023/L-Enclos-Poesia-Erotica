@@ -30,7 +30,7 @@ const source = Source_Sans_3({
 export const metadata: Metadata = {
   title: "L'Enclos Poesia Erotica",
   description:
-    "Salon littéraire dédié à la poésie amoureuse et érotique, en mémoire d'Anne de Lenclos, avec Abdelhamid Ladhari.",
+    "Jardin littéraire dédié à la poésie amoureuse et érotique, en mémoire d'Anne de Lenclos, avec Abdelhamid Ladhari.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

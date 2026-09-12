@@ -10,9 +10,9 @@ export function PortraitGallery() {
   return (
     <section className="overflow-hidden py-20">
       <div className="mx-auto max-w-6xl px-4 text-center">
-        <p className="font-display text-[11px] uppercase tracking-[0.4em] text-ink/45">XVIIᵉ</p>
-        <h2 className="mt-2 font-display text-4xl sm:text-5xl">{d.gallery}</h2>
-        <div className="gold-rule mx-auto mt-5 h-px w-40" />
+        <p className="font-display text-sm font-bold uppercase tracking-[0.3em] text-black">XVIIᵉ</p>
+        <h2 className="mt-2 font-display text-4xl font-bold sm:text-5xl text-black">{d.gallery}</h2>
+        <div className="gold-rule mx-auto mt-5 h-0.5 w-48 bg-black/30" />
       </div>
       <div className="mt-12 overflow-hidden">
         <div className="portrait-track flex gap-10 pe-10">
@@ -26,7 +26,7 @@ export function PortraitGallery() {
                   className="aspect-[3/4] w-full object-cover object-top"
                 />
               </div>
-              <figcaption className="mt-5 px-3 text-center font-display text-base text-ink/60">
+              <figcaption className="mt-5 px-3 text-center font-display text-lg font-semibold text-black">
                 {lang === "ar" ? p.altAr : p.altFr}
               </figcaption>
             </figure>

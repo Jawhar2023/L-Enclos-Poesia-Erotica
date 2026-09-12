@@ -30,11 +30,24 @@ function ChatIcon() {
   );
 }
 
-function LetterIcon() {
+function EnvelopeIcon() {
   return (
     <svg viewBox="0 0 40 40" className="h-8 w-8" aria-hidden fill="none">
       <rect x="8" y="12" width="24" height="16" rx="1.5" stroke="#3d3a38" strokeWidth="1.4" />
       <path d="m8 13 12 8 12-8" stroke="#3d3a38" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function LetterIcon() {
+  return (
+    <svg viewBox="0 0 40 40" className="h-8 w-8" aria-hidden fill="none">
+      <path
+        d="M20 10C14.5 10 10 14.5 10 20s4.5 10 10 10 10-4.5 10-10S25.5 10 20 10Z"
+        stroke="#3d3a38"
+        strokeWidth="1.4"
+      />
+      <path d="M18 24v-8h4a2 2 0 0 1 0 4h-4" stroke="#3d3a38" strokeWidth="1.4" />
     </svg>
   );
 }
@@ -67,38 +80,58 @@ export function ContactCopy() {
                 />
               </div>
             </div>
-            <p className="mt-8 font-display text-[11px] uppercase tracking-[0.38em] text-ink/50">
+            <p className="mt-8 font-display text-sm font-bold uppercase tracking-[0.25em] text-black">
               {d.contactKicker}
             </p>
-            <h1 className="mt-3 font-display text-4xl leading-tight sm:text-6xl">{d.contactTitle}</h1>
-            <div className="gold-rule mx-auto my-6 h-px w-28 lg:mx-0" />
-            <p className="mx-auto max-w-md text-lg leading-8 text-ink/70 lg:mx-0">{d.contactLead}</p>
+            <h1 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-6xl text-black">{d.contactTitle}</h1>
+            <div className="gold-rule mx-auto my-6 h-0.5 w-32 bg-black/40 lg:mx-0" />
+            <p className="mx-auto max-w-md text-xl font-medium leading-9 text-black lg:mx-0">{d.contactLead}</p>
           </div>
 
-          <div className="alcove relative rounded-[2rem] p-5 sm:p-8">
-            <div className="absolute -top-4 end-8 flex h-14 w-14 items-center justify-center rounded-full bg-butter shadow-md">
+          <div className="alcove relative rounded-[2rem] border-2 border-black/15 p-6 sm:p-9 shadow-sm">
+            <div className="absolute -top-4 end-8 flex h-14 w-14 items-center justify-center rounded-full bg-butter shadow-md border-2 border-black/20">
               <GateMark className="h-7 w-7" />
             </div>
-            <p className="max-w-lg font-display text-xl italic leading-8 text-ink/75">« {d.quote} »</p>
-            <p className="mt-3 font-display text-sm tracking-[0.18em] text-ink/45">— {d.quoteAuthor}</p>
-            <p className="mt-6 leading-7 text-ink/70">{d.contactNote}</p>
+            <p className="max-w-lg font-display text-2xl font-bold italic leading-9 text-black">« {d.quote} »</p>
+            <p className="mt-3 font-display text-base font-bold tracking-[0.18em] text-black/85">— {d.quoteAuthor}</p>
+            <p className="mt-6 text-lg font-medium leading-8 text-black">{d.contactNote}</p>
 
             <div className="mt-8 grid gap-4">
               <a
-                href="tel:+21698578939"
-                className="group flex items-center gap-4 rounded-[1.4rem] bg-gradient-to-br from-pistachio/70 to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
+                href="mailto:abdelhamidhari54@gmail.com"
+                className="group flex items-center gap-4 rounded-[1.4rem] border-2 border-black/15 bg-gradient-to-br from-butter to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
               >
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper border border-black/20">
+                  <EnvelopeIcon />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
+                    {d.email}
+                  </span>
+                  <span className="mt-1 block font-display text-xl sm:text-2xl font-bold text-black truncate" dir="ltr">
+                    abdelhamidhari54@gmail.com
+                  </span>
+                  <span className="mt-1 block text-base font-bold text-black underline decoration-black/40 underline-offset-4 group-hover:decoration-black">
+                    {d.emailAction}
+                  </span>
+                </span>
+              </a>
+
+              <a
+                href="tel:+21698578939"
+                className="group flex items-center gap-4 rounded-[1.4rem] border-2 border-black/15 bg-gradient-to-br from-pistachio to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
+              >
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper border border-black/20">
                   <PhoneIcon />
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-display text-xs uppercase tracking-[0.28em] text-ink/45">
+                  <span className="block font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
                     {d.phone} · {d.phoneHint}
                   </span>
-                  <span className="mt-1 block font-display text-2xl sm:text-3xl" dir="ltr">
+                  <span className="mt-1 block font-display text-2xl sm:text-3xl font-bold text-black" dir="ltr">
                     +216 98 578 939
                   </span>
-                  <span className="mt-1 block text-sm text-ink/55 underline decoration-ink/20 underline-offset-4 group-hover:text-ink">
+                  <span className="mt-1 block text-base font-bold text-black underline decoration-black/40 underline-offset-4 group-hover:decoration-black">
                     {d.phoneAction}
                   </span>
                 </span>
@@ -108,17 +141,17 @@ export function ContactCopy() {
                 href="https://wa.me/21698578939"
                 target="_blank"
                 rel="noreferrer"
-                className="group flex items-center gap-4 rounded-[1.4rem] bg-gradient-to-br from-sky/60 to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
+                className="group flex items-center gap-4 rounded-[1.4rem] border-2 border-black/15 bg-gradient-to-br from-sky to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
               >
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper border border-black/20">
                   <ChatIcon />
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-display text-xs uppercase tracking-[0.28em] text-ink/45">
+                  <span className="block font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
                     {d.whatsapp}
                   </span>
-                  <span className="mt-1 block font-display text-2xl">{d.whatsappAction}</span>
-                  <span className="mt-1 block text-sm text-ink/55" dir="ltr">
+                  <span className="mt-1 block font-display text-2xl font-bold text-black">{d.whatsappAction}</span>
+                  <span className="mt-1 block text-base font-bold text-black" dir="ltr">
                     +216 98 578 939
                   </span>
                 </span>
@@ -128,17 +161,17 @@ export function ContactCopy() {
                 href="https://www.facebook.com/abdelhamid.ladhari"
                 target="_blank"
                 rel="noreferrer"
-                className="group flex items-center gap-4 rounded-[1.4rem] bg-gradient-to-br from-rose/55 to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
+                className="group flex items-center gap-4 rounded-[1.4rem] border-2 border-black/15 bg-gradient-to-br from-rose to-paper p-4 shadow-sm transition hover:-translate-y-0.5 sm:p-5"
               >
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-paper border border-black/20">
                   <LetterIcon />
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-display text-xs uppercase tracking-[0.28em] text-ink/45">
+                  <span className="block font-display text-sm font-bold uppercase tracking-[0.2em] text-black">
                     {d.facebook}
                   </span>
-                  <span className="mt-1 block font-display text-2xl">{d.facebookAction}</span>
-                  <span className="mt-1 block text-sm text-ink/55">{d.facebookHint}</span>
+                  <span className="mt-1 block font-display text-2xl font-bold text-black">{d.facebookAction}</span>
+                  <span className="mt-1 block text-base font-bold text-black">{d.facebookHint}</span>
                 </span>
               </a>
             </div>

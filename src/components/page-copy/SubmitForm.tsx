@@ -9,10 +9,8 @@ export function SubmitForm() {
   const [ok, setOk] = useState(false);
   const [form, setForm] = useState({
     author: "",
-    titleFr: "",
-    titleAr: "",
-    bodyFr: "",
-    bodyAr: "",
+    title: "",
+    body: "",
   });
 
   async function submit(e: React.FormEvent) {
@@ -24,7 +22,7 @@ export function SubmitForm() {
     });
     if (res.ok) {
       setOk(true);
-      setForm({ author: "", titleFr: "", titleAr: "", bodyFr: "", bodyAr: "" });
+      setForm({ author: "", title: "", body: "" });
     }
   }
 
@@ -34,34 +32,32 @@ export function SubmitForm() {
         value={form[key]}
         onChange={(e) => setForm({ ...form, [key]: e.target.value })}
         placeholder={placeholder}
-        rows={7}
-        className="rounded-xl border border-mist bg-paper px-4 py-3 outline-none focus:border-sky"
+        rows={8}
+        className="rounded-xl border-2 border-black/25 bg-paper px-5 py-3.5 text-lg font-medium text-black placeholder:text-black/50 outline-none focus:border-black"
       />
     ) : (
       <input
         value={form[key]}
         onChange={(e) => setForm({ ...form, [key]: e.target.value })}
         placeholder={placeholder}
-        className="rounded-xl border border-mist bg-paper px-4 py-3 outline-none focus:border-sky"
+        className="rounded-xl border-2 border-black/25 bg-paper px-5 py-3.5 text-lg font-medium text-black placeholder:text-black/50 outline-none focus:border-black"
       />
     );
 
   return (
     <div>
-      <h1 className="font-display text-4xl">{d.submitTitle}</h1>
+      <h1 className="font-display text-4xl font-bold sm:text-5xl text-black">{d.submitTitle}</h1>
       <Ornament className="my-5 justify-start" />
-      <p className="text-ink/70">{d.submitLead}</p>
-      <form onSubmit={submit} className="mt-8 grid gap-3">
+      <p className="text-xl font-medium leading-8 text-black">{d.submitLead}</p>
+      <form onSubmit={submit} className="mt-8 grid gap-4">
         {field("author", d.submitAuthor)}
-        {field("titleFr", d.submitTitleFr)}
-        {field("titleAr", d.submitTitleAr)}
-        {field("bodyFr", d.submitBodyFr, true)}
-        {field("bodyAr", d.submitBodyAr, true)}
-        <button type="submit" className="justify-self-start rounded-full bg-rose/80 px-6 py-2 font-display">
+        {field("title", d.submitPoemTitle || d.submitTitleFr)}
+        {field("body", d.submitPoemBody || d.submitBodyFr, true)}
+        <button type="submit" className="justify-self-start rounded-full border-2 border-black bg-rose px-8 py-3 font-display text-lg font-bold text-black hover:bg-rose/85 transition">
           {d.submitSend}
         </button>
       </form>
-      {ok ? <p className="mt-4 rounded-xl bg-pistachio/50 px-4 py-3">{d.submitOk}</p> : null}
+      {ok ? <p className="mt-4 rounded-xl border-2 border-black/20 bg-pistachio px-5 py-4 font-bold text-black text-lg">{d.submitOk}</p> : null}
     </div>
   );
 }

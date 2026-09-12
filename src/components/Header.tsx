@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GateMark } from "@/components/GateMark";
 import { LangSwitch } from "@/components/LangSwitch";
 import { useLang } from "@/context/LangContext";
@@ -11,6 +11,11 @@ export function Header() {
   const { d, lang } = useLang();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const links = [
     ["/", d.navHome],
     ["/salon", d.navSalon],
@@ -24,16 +29,16 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-mist/70 bg-cream/75 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-8 px-6 py-4 lg:px-10 lg:py-5">
-        <Link href="/" className="flex min-w-0 items-center gap-3.5">
+        <Link href="/" onClick={() => setOpen(false)} className="flex min-w-0 items-center gap-3.5">
           <GateMark className="h-10 w-10 shrink-0" />
           <span className="min-w-0">
             <p
-              className={`${linkFont} text-[11px] uppercase leading-none tracking-[0.28em] text-ink/45`}
+              className={`${linkFont} text-xs uppercase font-semibold leading-none tracking-[0.25em] text-black/80`}
             >
               {d.siteTag}
             </p>
             <h1
-              className={`${linkFont} mt-1.5 truncate text-[1.35rem] font-medium leading-none tracking-tight sm:text-[1.5rem]`}
+              className={`${linkFont} mt-1.5 truncate text-[1.45rem] font-bold leading-none tracking-tight sm:text-[1.65rem] text-black`}
             >
               {d.siteName}
             </h1>
@@ -46,15 +51,17 @@ export function Header() {
               <Link
                 key={href}
                 href={href}
-                className={`${linkFont} mx-1.5 px-2.5 py-1 text-[1.125rem] font-medium leading-none tracking-[0.03em] transition ${
-                  active ? "text-ink" : "text-ink/58 hover:text-ink"
+                className={`${linkFont} mx-2 px-3 py-1.5 text-[1.35rem] sm:text-[1.45rem] font-bold leading-none tracking-[0.02em] transition-all duration-200 ${
+                  active
+                    ? "text-black font-extrabold scale-[1.08]"
+                    : "text-black/90 hover:text-black hover:scale-[1.05]"
                 }`}
               >
                 <span className={`nav-label ${active ? "is-active" : ""}`}>{label}</span>
               </Link>
             );
           })}
-          <span className="mx-3 h-5 w-px bg-ink/12" aria-hidden />
+          <span className="mx-3 h-5 w-px bg-black/20" aria-hidden />
           <AdminIconLink label={d.navAdmin} />
           <span className="ms-3">
             <LangSwitch />
@@ -65,7 +72,7 @@ export function Header() {
           <LangSwitch />
           <button
             type="button"
-            className="rounded-full border border-ink/15 bg-paper/80 px-3.5 py-1.5 text-base"
+            className="rounded-full border border-black/30 bg-paper px-3.5 py-1.5 text-base font-bold text-black"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="Menu"
@@ -83,8 +90,8 @@ export function Header() {
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className={`${linkFont} rounded-xl px-2 py-2.5 text-[1.25rem] font-medium ${
-                  active ? "bg-paper/80 text-ink" : "text-ink/70"
+                className={`${linkFont} rounded-xl px-2 py-2.5 text-[1.35rem] font-bold ${
+                  active ? "bg-paper text-black" : "text-black/85 hover:text-black"
                 }`}
               >
                 {label}
@@ -94,7 +101,7 @@ export function Header() {
           <Link
             href="/admin"
             onClick={() => setOpen(false)}
-            className={`${linkFont} mt-1 flex items-center gap-2 rounded-xl px-2 py-2.5 text-[1.25rem] font-medium text-ink/70`}
+            className={`${linkFont} mt-1 flex items-center gap-2 rounded-xl px-2 py-2.5 text-[1.35rem] font-bold text-black`}
           >
             <AdminGlyph />
             {d.navAdmin}
@@ -107,9 +114,9 @@ export function Header() {
 
 function AdminGlyph() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden fill="none">
-      <rect x="4" y="8" width="16" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M8 8V6.5A4 4 0 0 1 16 6.5V8" stroke="currentColor" strokeWidth="1.4" />
+    <svg viewBox="0 0 24 24" className="h-5 w-5 text-black" aria-hidden fill="none">
+      <rect x="4" y="8" width="16" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8 8V6.5A4 4 0 0 1 16 6.5V8" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="12" cy="14" r="1.3" fill="currentColor" />
     </svg>
   );
@@ -121,7 +128,7 @@ function AdminIconLink({ label }: { label: string }) {
       href="/admin"
       aria-label={label}
       title={label}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 bg-paper/80 text-ink/70 transition hover:border-ink/30 hover:text-ink"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/25 bg-paper text-black transition hover:border-black hover:scale-105"
     >
       <AdminGlyph />
     </Link>

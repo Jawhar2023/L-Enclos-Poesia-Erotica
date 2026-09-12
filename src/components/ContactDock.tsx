@@ -35,6 +35,13 @@ export function ContactDock() {
         {open ? (
           <>
             <a
+              href="mailto:abdelhamidhari54@gmail.com"
+              aria-label={d.email}
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-black bg-[#EAB308] text-black shadow-[0_6px_16px_rgba(234,179,8,0.45)] transition hover:scale-105"
+            >
+              <EnvelopeGlyph />
+            </a>
+            <a
               href={FACEBOOK}
               target="_blank"
               rel="noreferrer"
@@ -73,6 +80,15 @@ export function ContactDock() {
         </button>
       </div>
     </div>
+  );
+}
+
+function EnvelopeGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden fill="none">
+      <rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
   );
 }
 
